@@ -1,0 +1,55 @@
+<!-- Intégration du composant todo-form -->
+
+  <form id="todo-form" [formGroup]="todoForm" (submit)="saveTodo()">
+      <div id="titre">
+          Todo List Yakalélo
+      </div>
+  <div id="uno">
+    <div class ="list">
+      <input 
+      id="afaire" 
+      class="form-control" 
+      type="text" 
+      placeholder="A faire..." 
+      formControlName="title"
+      (submit)=saveTodo()>
+      </div>
+
+      <div
+        class="alert alert-warning"
+        *ngIf="title.invalid && title.touched">
+        Le titre du todo ne peut pas être vide<br>
+        et contenir au moins 5 caractères.
+      </div>
+    </div>
+
+    <div class="list form-group"> 
+      <input 
+        class="limite form-control" 
+        type="date" 
+        placeholder="Du..." 
+        formControlName="begin">
+      <input class="limite form-control" 
+      type="date" placeholder="Au..."  
+      formControlName="end">
+    </div>
+
+    <div
+    class="alert alert-warning"
+    *ngIf="todoForm.hasError('begin')"
+    >
+    La date de fin doit être supérieure à la date de début
+    </div>
+  
+  <div id="dunno">
+    <button 
+        class="btn btn btn-success"
+        type="submit" 
+        [disabled]="todoForm.invalid"
+    >
+      Ajouter
+    </button>
+    </div>
+</form>
+
+
