@@ -8,14 +8,42 @@ import {
   MatPaginatorModule,
   MatSortModule,  //permet de définir des entete de colonne qui auront pour objectif de trier la colonne
   MatIconModule,
-  MatButtonModule
+  MatButtonModule,
+  MatToolbarModule,
+  MatFormFieldModule,
+  MatSelectModule,
+  MatOptionModule
 } from '@angular/material';
 
 
 @NgModule({
-  imports: [
-    CommonModule
+  imports: [       // crée des new quelque chose
+    CommonModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,  //permet de définir des entete de colonne qui auront pour objectif de trier la colonne
+    MatIconModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule
   ],
-  declarations: []
+  declarations: [],
+                    // informer les autres modules et composants qu'ils existent 
+  exports: [
+    CommonModule,
+    BrowserAnimationsModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,  
+    MatIconModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatOptionModule
+  ]
 })
 export class MaterialModule { }

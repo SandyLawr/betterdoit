@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { FormControl } from '@angular/forms';
 import { TodoService} from './../../shared/services/todo.service';
 import { TodoInterface } from '../../shared/interfaces/todo-interface';
 
+// Importation des composants MAterial
+import { MatTableDataSource, MatPaginator, MatSort, MatSelect, MatOption } from '@angular/material'; //new ajout
 
 
 @Component({
@@ -11,7 +14,8 @@ import { TodoInterface } from '../../shared/interfaces/todo-interface';
   styleUrls: ['./view-todo.component.scss']
 })
 export class ViewTodoComponent implements OnInit {
-
+  @ViewChild(MatSort) sort: MatSort;
+  
   /**
    * Abonnement à un todo qui vient de l'espace
    * (meuh non.. de TodoService.)
@@ -21,6 +25,41 @@ export class ViewTodoComponent implements OnInit {
   public todos: TodoInterface[];
 
   public checkedStatus: boolean = false;
+
+  /**
+   * Source des données pour le tableau MAterial
+   */
+  public dataSource = new MatTableDataSource<TodoInterface>();
+
+  /**
+   * Colonnes utilisées dans mat-table
+   */
+  public columns = new FormControl;
+
+  public availableColumns : String[] = [
+    'begin',
+    'end'
+  ];
+
+
+  public selectedValue : String[] = [
+    'begin',
+    'end'
+  ];
+
+//Selectionné par l'utilisateur
+
+
+public selectedOptions : any; 
+
+
+  public displayedColumns: String[] = [
+    'title',
+    'begin',
+    'end',
+    'update',
+    'delete'
+  ];
 
   constructor(private todoService: TodoService) { 
     this.todos = []; //Définit le tableau des todos à afficher
@@ -38,6 +77,7 @@ export class ViewTodoComponent implements OnInit {
       }else {
         this.todos[index] = todo;
       }  
+      this.dataSource.data = this.todos;
     });
   }
 
@@ -51,6 +91,10 @@ export class ViewTodoComponent implements OnInit {
     this.todoService.getTodos().subscribe((todos) => {
       this.todos = todos;
       console.log('Il y a '+this.todos.length+' todos à afficher');
+
+      // On définti à ce moment la source de données
+      this.dataSource.data = this.todos;
+      this.dataSource.sort = this.sort;
     });
   }
   
@@ -72,9 +116,11 @@ export class ViewTodoComponent implements OnInit {
    * Supprime un todo de la todos list
    */
 
-  public delete(index: number): void {
+  public delete(todo: TodoInterface): void {
+    const index= this.todos.indexOf(todo);
     const _todo = this.todos[index];  // Récupère le todo
     this.todos.splice(index, 1);  // Dépile l'élément
+    this.dataSource.data = this.todos;
     this.todoService.deleteTodo(_todo);  // Appelle le service en lui passant mon todo
   }
 
@@ -140,5 +186,36 @@ public update(todo) {
   this.todoService.sendTodo(todo);
 }
 
+public changeView(event: any)
+: void {
+  console.log(this.selectedOptions+ ' de taille: '+this.selectedOptions.length)
+
+  const toShow: String[] = this.selectedOptions;
+  /**
+   * Définit le tableau final pour l'affichage des colonnes
+   */
+  const toDisplay: String[] = [];
+
+  toDisplay.push('title'); //Toujours affihcée, donc... on le push
+
+  if (toShow.indexOf('begin') !== -1) {
+    // begin est coché, on le push
+    toDisplay.push('begin');
+  }
+
+  if (toShow.indexOf('end') !== -1) {
+    // est est coché, on le push
+    toDisplay.push('end');
+  }
+
+  // on doit toujours avoir les boutons aussi
+  toDisplay.push('update');
+  toDisplay.push('delete');
+
+  /**
+   * On remplace le tableau des colonnes à afficher dans le tableau
+   */
+  this.displayedColumns = toDisplay ;
+}
 
 }

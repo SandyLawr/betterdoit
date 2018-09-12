@@ -1,4 +1,8 @@
-
+.move-right {
+    /* This fills the remaining space, by using flexing
+    Every toolbar*/
+    flex: 1 1 auto;
+}
 th, td {
     width: 20em;
     text-align: center;
@@ -8,7 +12,13 @@ th, td {
 th {
     color: white;
 }
-
+mat-toolbar {
+    height: 100px;
+    background-color: #ffffff;
+    //border: solid #b9b9b9 .1px;
+    box-shadow: 2px 2px 10px #6c757d;
+    border-radius: 15px 15px 0 0;
+}
 
 #title {
  width: 50%;   
@@ -38,6 +48,8 @@ input.form-check.dontknow {
 }
 .wasav {
     width: 8em;
-    margin-bottom: .8em;
+}
+.outils {
+    font-size: 1em;
 }
 
