@@ -18,7 +18,7 @@
                <!-- selectedValue : ce qui permet que les boîtes soient cochées
                     selectedOptions permet de garder les values
                     changeView, une méthode inventé qui récupère ce qui a été sélectionné par l'utilisateur-->
-                <mat-option *ngFor="let columns of availableColumns;" [value]="columns">{{columns}}</mat-option> <!--ce qui sera afficher-->
+                <mat-option *ngFor="let columns of helper.getOptionalColumns();" [value]="columns.value">{{columns.title}}</mat-option> <!--ce qui sera afficher-->
               </mat-select>
             </mat-form-field>
             
@@ -40,29 +40,29 @@
     <!--pour construire mon tableau, je vais utiliser le datasource-->
 
     <!--Titre -->
-    <ng-container matColumnDef="title">
-      <mat-header-cell *matHeaderCellDef>A faire</mat-header-cell> 
-      <mat-cell *matCellDef="let todo">{{todo.title}}</mat-cell> <!--dit d'ou je sors l'information-->
+    <ng-container matColumnDef="title" id="titleTable">
+      <mat-header-cell *matHeaderCellDef>{{ helper.getColumn('title').title }}</mat-header-cell> 
+      <mat-cell  *matCellDef="let todo">{{todo.title}}</mat-cell> <!--dit d'ou je sors l'information-->
     </ng-container>
 
     <!-- Date de début -->
     <ng-container matColumnDef="begin">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Du...</mat-header-cell> 
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ helper.getColumn('begin').title }}</mat-header-cell> 
         <mat-cell *matCellDef="let todo">{{ todo.begin | date: 'dd-MM-yyyy' }}</mat-cell> <!--dit d'ou je sors l'information-->
     </ng-container>
 
     <!-- Date de fin -->
     <ng-container matColumnDef="end">
-        <mat-header-cell *matHeaderCellDef mat-sort-header>Au...</mat-header-cell> 
+        <mat-header-cell *matHeaderCellDef mat-sort-header>{{ helper.getColumn('end').title }}</mat-header-cell> 
         <mat-cell *matCellDef="let todo">{{ todo.end | date: 'dd-MM-yyyy' }}</mat-cell> <!--dit d'ou je sors l'information-->
     </ng-container>
 
 
     <!-- Modification d'un todo -->
     <ng-container matColumnDef="update">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell> 
+        <mat-header-cell *matHeaderCellDef>{{ helper.getColumn('update').title }}</mat-header-cell> 
         <mat-cell *matCellDef="let todo">
-          <button mat-mini-fab color="accent" (click)="update(todo)">
+          <button mat-button color="accent" (click)="update(todo)">
             <mat-icon aria-label="Modifier le todo">
               create
             </mat-icon>
@@ -72,9 +72,9 @@
 
     <!-- Bouton de suppression -->
     <ng-container matColumnDef="delete">
-        <mat-header-cell *matHeaderCellDef></mat-header-cell> 
+        <mat-header-cell *matHeaderCellDef>{{ helper.getColumn('delete').title }}</mat-header-cell> 
         <mat-cell *matCellDef="let todo">
-          <button mat-mini-fab color="warn" (click)="delete(todo)">
+          <button mat-button color="warn" (click)="delete(todo)">
             <mat-icon aria-label="Supprimer le todo">
               delete
             </mat-icon>
@@ -82,8 +82,8 @@
         </mat-cell>
     </ng-container>
 <!-- dit d'aller chercher pour l'entête dans displayedColumns et aller chercher les lignes dasn row et columns.-->
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-header-row *matHeaderRowDef="helper.getDisplayedColumns()"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: helper.getDisplayedColumns();"></mat-row>
   </mat-table>
 
 </div>

@@ -7,6 +7,9 @@ import { TodoInterface } from '../../shared/interfaces/todo-interface';
 // Importation des composants MAterial
 import { MatTableDataSource, MatPaginator, MatSort, MatSelect, MatOption } from '@angular/material'; //new ajout
 
+import { TodoHelper } from '../../shared/helpers/todo-helper';
+import { MatColumns } from '../../shared/interfaces/mat-columns';
+
 
 @Component({
   selector: 'view-todo',
@@ -24,6 +27,11 @@ export class ViewTodoComponent implements OnInit {
 
   public todos: TodoInterface[];
 
+  /**
+   * Instance de la classe TodoHElper
+   */
+  public helper: TodoHelper;
+
   public checkedStatus: boolean = false;
 
   /**
@@ -36,33 +44,22 @@ export class ViewTodoComponent implements OnInit {
    */
   public columns = new FormControl;
 
-  public availableColumns : String[] = [
-    'begin',
-    'end'
-  ];
 
 
-  public selectedValue : String[] = [
-    'begin',
-    'end'
-  ];
+
+  public selectedValue : String[];
 
 //Selectionné par l'utilisateur
+public selectedOptions : String[]; 
 
 
-public selectedOptions : any; 
-
-
-  public displayedColumns: String[] = [
-    'title',
-    'begin',
-    'end',
-    'update',
-    'delete'
-  ];
-
+ 
   constructor(private todoService: TodoService) { 
     this.todos = []; //Définit le tableau des todos à afficher
+
+    // Instancie le helper
+    this.helper = new TodoHelper();
+    this.selectedValue = this.helper.optionalColumnsToArray();
 
     this.todoSubscription = this.todoService.getTodo()
     //va renvoyer un observable d'un sujet (todoInterface)
@@ -97,6 +94,15 @@ public selectedOptions : any;
       this.dataSource.sort = this.sort;
     });
   }
+
+  /**
+   * Retourne le label associé aux éléments à afficher
+   * @param index Indice à récupérer dans le tableau
+   */
+  public getLabel(index: number):String {
+    return this.availableColumns[index].label;
+  }
+
   
   public checkUnCheckAll() {
     this.checkedStatus = !this.checkedStatus;
@@ -186,36 +192,9 @@ public update(todo) {
   this.todoService.sendTodo(todo);
 }
 
-public changeView(event: any)
-: void {
-  console.log(this.selectedOptions+ ' de taille: '+this.selectedOptions.length)
+public changeView(event: any): void {
+  this.helper.setDisplayedColumns(this.selectedOptions);
 
-  const toShow: String[] = this.selectedOptions;
-  /**
-   * Définit le tableau final pour l'affichage des colonnes
-   */
-  const toDisplay: String[] = [];
-
-  toDisplay.push('title'); //Toujours affihcée, donc... on le push
-
-  if (toShow.indexOf('begin') !== -1) {
-    // begin est coché, on le push
-    toDisplay.push('begin');
-  }
-
-  if (toShow.indexOf('end') !== -1) {
-    // est est coché, on le push
-    toDisplay.push('end');
-  }
-
-  // on doit toujours avoir les boutons aussi
-  toDisplay.push('update');
-  toDisplay.push('delete');
-
-  /**
-   * On remplace le tableau des colonnes à afficher dans le tableau
-   */
-  this.displayedColumns = toDisplay ;
 }
 
 }
